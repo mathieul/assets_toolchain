@@ -15,7 +15,27 @@ defmodule Mix.Tasks.Assets.Setup do
     setup_web     6
     update_readme 7
 
-    Mix.shell.info "Done, read README.md for more info on the assets toolchain usage."
+    Mix.shell.info """
+
+    The installation of the assets toolchain is done.
+
+    For more information read the updated README.md file in your project folder.
+
+    Quick Start:
+
+      * edit the **dynamo.ex** file in your project lib directory and update the static route to:
+        [...]
+        static_route: "/"
+        [...]
+      * open a terminal and run (where /path/to/project is the actual path):
+        $ cd /path/to/project
+        $ bundle exec guard
+      * open another terminal and run:
+        $ cd /path/to/project
+        $ mix server
+      * open a browser and go to location **http://localhost:4000**
+
+    """
   end
 
   defp setup_bundler(step) do
