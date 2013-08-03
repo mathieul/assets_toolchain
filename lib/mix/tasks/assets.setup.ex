@@ -125,7 +125,7 @@ defmodule Mix.Tasks.Assets.Setup do
                          output: compiled_js_dir,
                          all_on_start: true
 
-    guard :compass, configuration_file: "config/compass.rb"
+    guard :compass, configuration_file: "config/compass.rb", compile_on_start: true
 
     guard :jammit, output_folder: "priv/static/javascripts" do
       watch(%r{^#{compiled_js_dir}/(.*)\.js$})
