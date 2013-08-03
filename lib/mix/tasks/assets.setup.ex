@@ -89,6 +89,16 @@ defmodule Mix.Tasks.Assets.Setup do
     """
     Mix.shell.cmd "compass create . -r bootstrap-sass --using bootstrap"
     File.rm "config.rb"
+    Mix.shell.cmd "mv priv/assets/stylesheets/styles.sass priv/assets/stylesheets/application.sass"
+    File.write! "priv/assets/stylesheets/application.sass", """, [ :append ]
+
+    // this partial is intended for you to override some bootstrap styles for your application
+    @import customize_bootstrap
+    """
+    File.write! "priv/assets/stylesheets/_customize_bootstrap.sass", """
+    body
+      padding-top: 40px
+    """
     File.mkdir_p! "priv/assets/images"
     File.mkdir_p! "priv/assets/coffeescripts"
     File.write! "priv/assets/coffeescripts/common.coffee", """
@@ -172,7 +182,7 @@ defmodule Mix.Tasks.Assets.Setup do
     <head>
       <meta charset="utf-8">
       <title><%= content_for(:title) || "TODO: replace me" %></title>
-      <link href="/stylesheets/styles.css" rel="stylesheet">
+      <link href="/stylesheets/application.css" rel="stylesheet">
     </head>
     <body>
       <div class="navbar navbar-fixed-top">
