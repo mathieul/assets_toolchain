@@ -1,4 +1,4 @@
-defmodule AssetToolchain.Mixfile do
+defmodule AssetsToolchain.Mixfile do
   use Mix.Project
 
   def project do

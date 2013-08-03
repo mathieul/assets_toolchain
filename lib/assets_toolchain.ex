@@ -1,0 +1,2 @@
+defmodule AssetsToolchain do
+end
