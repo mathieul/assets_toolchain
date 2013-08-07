@@ -1,5 +1,6 @@
 defmodule Mix.Tasks.Assets.Setup do
   use Mix.Task
+  import AssetsToolchain.Operations
 
   @shortdoc "Setup assets"
 
@@ -40,32 +41,9 @@ defmodule Mix.Tasks.Assets.Setup do
 
   defp setup_bundler(step) do
     Mix.shell.info "[#{step}] install Sass, Compass, Bootstrap, Guard..."
-    File.write! "Gemfile", """
-    # Gemfile
-    source "https://rubygems.org"
-
-    gem "compass", "~> 0.12.2"
-    gem "bootstrap-sass", "~> 2.3.2.1"
-    gem "coffee-script", "~> 2.2.0"
-    gem "uglifier", "~> 2.1.2"
-    gem "jammit", "~> 0.6.6"
-
-    gem "guard-compass"
-    gem "guard-coffeescript"
-    gem "guard-jammit"
-    gem "guard-copy"
-
-    gem "foreman", "~> 0.63.0"
-    """
-    Mix.shell.cmd "gem install bundler && bundle update"
-    File.write! ".gitignore", """, [ :append ]
-    /Mnesia.*
-    /priv/compiled
-    /priv/static
-    .DS_Store
-    .sass-cache
-    *.ez
-    """
+    File.write! "Gemfile", read_template("Gemfile")
+    # Mix.shell.cmd "gem install bundler && bundle update"
+    File.write! ".gitignore", read_file("gitignore"), [ :append ]
   end
 
   defp setup_compass(step) do
