@@ -1,0 +1,13 @@
+package_assets:         on
+javascript_compressor:  uglifier
+compress_assets:        off
+gzip_assets:            off
+
+javascripts:
+  application:
+    # bootstrap sources
+    - priv/vendor/javascripts/bootstrap/bootstrap-transition.js
+    - priv/vendor/javascripts/bootstrap/bootstrap-alert.js
+
+    # application sources
+    - priv/compiled/javascripts/common.js

@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><%= content_for(:title) || "TODO: replace me" %></title>
+  <link href="/stylesheets/application.css" rel="stylesheet">
+  <link rel="shortcut icon" href="/favicon.ico" />
+</head>
+<body>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="/"><%= @title %></a>
+        <ul class="nav">
+          <li class="active"><a href="/">Home</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="span12">
+        <%= content_for :template %>
+      </div>
+    </div>
+  </div>
+
+  <script src="/javascripts/application.js"></script>
+  <%= content_for :javascript %>
+</body>
+</html>

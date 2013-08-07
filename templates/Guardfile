@@ -1,0 +1,27 @@
+require "fileutils"
+
+compiled_js_dir = "priv/compiled/javascripts"
+
+guard :coffeescript, input: "priv/assets/coffeescripts",
+                     output: compiled_js_dir,
+                     all_on_start: true
+
+guard :compass, configuration_file: "config/compass.rb", compile_on_start: true
+
+guard :jammit, output_folder: "priv/static/javascripts" do
+  watch(%r{^#{compiled_js_dir}/(.*)\.js$})
+  watch(%r{config/assets.yml})
+end
+
+guard :copy, from: "priv/assets/images",
+             to: "priv/static/images",
+             mkpath: true,
+             run_at_start: true
+
+guard :copy, from: "priv/vendor/images",
+             to: "priv/static/images",
+             mkpath: true,
+             run_at_start: true
+
+FileUtils.mkdir "priv/static" unless File.exists?("priv/static")
+FileUtils.cp "priv/assets/favicon.ico", "priv/static"

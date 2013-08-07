@@ -1,0 +1,11 @@
+<% content_for :title do %><%= @title %> | Welcome<% end %>
+<section>
+  <div class="page-header">
+    <h1>Welcome to Dynamo!</h1>
+  </div>
+  <ol>
+    <li>Change this template at <code>web/templates/index.html.eex</code></li>
+    <li>Add new routes at <code>web/routers/application_router.ex</code></li>
+    <li>Deploy to production with <code>MIX_ENV=prod mix do compile, server</code></li>
+  </ol>
+</section>
