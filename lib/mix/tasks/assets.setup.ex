@@ -8,46 +8,29 @@ defmodule Mix.Tasks.Assets.Setup do
   A task to setup Sass, Compass, Bootstrap, CoffeeScript and Guard.
   """
   def run(_args) do
-    setup_bundler 1
-    setup_compass 2
-    setup_guard   3
-    setup_jammit  4
-    setup_foreman 5
-    setup_web     6
-    update_readme 7
-
-    Mix.shell.info """
-
-    The installation of the assets toolchain is done.
-
-    For more information read the updated README.md file in your project folder.
-
-    Quick Start:
-
-      * edit the **dynamo.ex** file in your project lib directory and update the static route to:
-        [...]
-        static_route: "/"
-        [...]
-      * open a terminal and run (where /path/to/project is the actual path):
-        $ cd /path/to/project
-        $ bundle exec guard
-      * open another terminal and run:
-        $ cd /path/to/project
-        $ mix server
-      * open a browser and go to location **http://localhost:4000**
-
-    """
+    steps = Enum.with_index([
+      { &setup_bundler/0, "install Sass, Compass, Bootstrap, Guard" },
+      { &setup_compass/0, "Setup compass" },
+      { &setup_guard/0,   "Setup guard" },
+      { &setup_jammit/0,  "Setup jammit" },
+      { &setup_foreman/0, "Setup foreman" },
+      { &setup_web/0,     "Setup web" },
+      { &update_readme/0, "Update readme" },
+    ])
+    Enum.each steps, fn { { func, info }, i } ->
+      Mix.shell.info "[#{i + 1}] #{info}..."
+      func.()
+    end
+    display_instructions
   end
 
-  defp setup_bundler(step) do
-    Mix.shell.info "[#{step}] install Sass, Compass, Bootstrap, Guard..."
+  defp setup_bundler do
     File.write! "Gemfile", read_template("Gemfile")
-    # Mix.shell.cmd "gem install bundler && bundle update"
+    Mix.shell.cmd "gem install bundler && bundle update"
     File.write! ".gitignore", read_file("gitignore"), [ :append ]
   end
 
-  defp setup_compass(step) do
-    Mix.shell.info "[#{step}] Setup compass..."
+  defp setup_compass do
     File.mkdir_p! "./config"
     File.write! "config/compass.rb", """
     # compass.rb
@@ -91,8 +74,7 @@ defmodule Mix.Tasks.Assets.Setup do
     """
   end
 
-  defp setup_guard(step) do
-    Mix.shell.info "[#{step}] Setup guard..."
+  defp setup_guard do
     File.write! "Guardfile", %B"""
     # Guardfile
     require "fileutils"
@@ -125,8 +107,7 @@ defmodule Mix.Tasks.Assets.Setup do
     """
   end
 
-  defp setup_jammit(step) do
-    Mix.shell.info "[#{step}] Setup jammit..."
+  defp setup_jammit do
     File.write! "config/assets.yml", """
     package_assets:         on
     javascript_compressor:  uglifier
@@ -144,15 +125,13 @@ defmodule Mix.Tasks.Assets.Setup do
     """
   end
 
-  defp setup_foreman(step) do
-    Mix.shell.info "[#{step}] Setup foreman..."
+  defp setup_foreman do
     File.write! "Procfile", """
     web: env MIX_ENV=dev elixir --sname dev -S mix server -p $PORT
     """
   end
 
-  defp setup_web(step) do
-    Mix.shell.info "[#{step}] Setup web..."
+  defp setup_web do
     File.mkdir_p! "web/templates/layouts"
     File.write! "web/templates/layouts/application.html.eex", """
     <!DOCTYPE HTML>
@@ -226,8 +205,7 @@ defmodule Mix.Tasks.Assets.Setup do
     """
   end
 
-  defp update_readme(step) do
-    Mix.shell.info "[#{step}] Update readme..."
+  defp update_readme do
     File.write! "README.md", """, [ :append ]
 
     ## Assets Toolchain
@@ -278,6 +256,30 @@ defmodule Mix.Tasks.Assets.Setup do
             │   └── ./web/routers/application_router.ex
             └── ./web/templates
                 └── ./web/templates/index.html.eex
+    """
+  end
+
+  def display_instructions do
+    Mix.shell.info """
+
+    The installation of the assets toolchain is done.
+
+    For more information read the updated README.md file in your project folder.
+
+    Quick Start:
+
+      * edit the **dynamo.ex** file in your project lib directory and update the static route to:
+        [...]
+        static_route: "/"
+        [...]
+      * open a terminal and run (where /path/to/project is the actual path):
+        $ cd /path/to/project
+        $ bundle exec guard
+      * open another terminal and run:
+        $ cd /path/to/project
+        $ mix server
+      * open a browser and go to location **http://localhost:4000**
+
     """
   end
 end
