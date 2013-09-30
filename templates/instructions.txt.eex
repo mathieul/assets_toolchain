@@ -7,10 +7,6 @@ For more information read the updated README.md file in your project folder.
 
 Quick Start:
 
-  * edit the **dynamo.ex** file in your project lib directory and update the static route to:
-    [...]
-    static_route: "/"
-    [...]
   * open a terminal and run (where /path/to/project is the actual path):
     $ cd /path/to/project
     $ bundle exec guard

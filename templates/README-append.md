@@ -1,7 +1,7 @@
 
 ## Assets Toolchain
 
-In order to user the assets toolchain, you need to run the **guard** command
+In order to use the assets toolchain, you need to run the **guard** command
 in a terminal. This command will stay open (you exit with Ctrl-C) and
 regenerate your static assets when you change your source assets.
 
