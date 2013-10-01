@@ -1,0 +1,9 @@
+package_assets:         on
+javascript_compressor:  uglifier
+compress_assets:        off
+gzip_assets:            off
+
+javascripts:
+  application:
+    # application sources
+    - priv/compiled/javascripts/common.js

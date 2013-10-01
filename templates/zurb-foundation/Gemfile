@@ -1,0 +1,14 @@
+source "https://rubygems.org"
+
+gem "compass", "~> 0.12.2"
+gem "zurb-foundation", "~> 4.3.2"
+gem "coffee-script", "~> 2.2.0"
+gem "uglifier", "~> 2.1.2"
+gem "jammit", "~> 0.6.6"
+
+gem "guard-compass"
+gem "guard-coffeescript"
+gem "guard-jammit"
+gem "guard-copy"
+
+gem "foreman", "~> 0.63.0"
