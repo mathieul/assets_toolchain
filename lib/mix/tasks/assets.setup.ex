@@ -7,41 +7,41 @@ defmodule Mix.Tasks.Assets.Setup do
   @moduledoc """
   A task to setup Sass, Compass, Bootstrap, CoffeeScript and Guard.
   """
-  def run(_args) do
+  def run(args) do
+    config = parse_config(args)
     steps = Enum.with_index([
-      { &setup_bundler/0, "install Sass, Compass, Bootstrap, Guard" },
-      { &setup_compass/0, "Setup compass" },
-      { &setup_guard/0,   "Setup guard" },
-      { &setup_jammit/0,  "Setup jammit" },
-      { &setup_foreman/0, "Setup foreman" },
-      { &setup_web/0,     "Setup web" },
-      { &update_readme/0, "Update readme" },
+      { &setup_bundler/1, "install Sass, Compass, Guard" },
+      { &setup_compass/1, "Setup compass" },
+      { &setup_guard/1,   "Setup guard" },
+      { &setup_jammit/1,  "Setup jammit" },
+      { &setup_foreman/1, "Setup foreman" },
+      { &setup_web/1,     "Setup web" },
+      { &update_readme/1, "Update readme" },
     ])
     Enum.each steps, fn { { func, info }, i } ->
       Mix.shell.info "[#{i + 1}] #{info}..."
-      func.()
+      func.(config)
     end
-    display_instructions
+    display_instructions(config)
   end
 
-  defp setup_bundler do
-    File.write! "Gemfile", read_file("Gemfile")
+  defp setup_bundler(config) do
+    copy_file "Gemfile", config: config
     Mix.shell.cmd "gem install bundler && bundle update"
-    File.write! ".gitignore", read_file("gitignore"), [ :append ]
+    append_file "gitignore", to: ".gitignore", config: config
   end
 
-  defp setup_compass do
+  defp setup_compass(config) do
     File.mkdir_p! "./config"
-    File.write! "config/compass.rb", read_file("config/compass.rb")
+    copy_file "config/compass.rb", config: config
     Mix.shell.cmd "compass create . -r bootstrap-sass --using bootstrap"
     File.rm "config.rb"
     Mix.shell.cmd "mv priv/assets/stylesheets/styles.sass priv/assets/stylesheets/application.sass"
-    File.write! "priv/assets/stylesheets/application.sass",
-      read_file("sass/application-append.sass"), [ :append ]
-    File.write! "priv/assets/stylesheets/_customize_bootstrap.sass", read_file("sass/_customize_bootstrap.sass")
+    append_file "sass/application-append.sass", to: "priv/assets/stylesheets/application.sass", config: config
+    copy_file "sass/_customize_bootstrap.sass", to: "priv/assets/stylesheets/_customize_bootstrap.sass", config: config
     File.mkdir_p! "priv/assets/images"
     File.mkdir_p! "priv/assets/coffeescripts"
-    File.write! "priv/assets/coffeescripts/common.coffee", read_file("coffee/common.coffee")
+    copy_file "coffee/common.coffee", to: "priv/assets/coffeescripts/common.coffee", config: config
     File.mkdir_p! "priv/vendor"
     Mix.shell.cmd """
     mv priv/static/images priv/vendor
@@ -50,31 +50,32 @@ defmodule Mix.Tasks.Assets.Setup do
     """
   end
 
-  defp setup_guard do
-    File.write! "Guardfile", read_file("Guardfile")
+  defp setup_guard(config) do
+    copy_file "Guardfile", config: config
   end
 
-  defp setup_jammit do
-    File.write! "config/assets.yml", read_file("config/assets.yml")
+  defp setup_jammit(config) do
+    File.mkdir_p! "./config"
+    copy_file "config/assets.yml", config: config
   end
 
-  defp setup_foreman do
-    File.write! "Procfile", read_file("Procfile")
+  defp setup_foreman(config) do
+    copy_file "Procfile", config: config
   end
 
-  defp setup_web do
+  defp setup_web(config) do
     File.mkdir_p! "web/templates/layouts"
-    File.write! "web/templates/layouts/application.html.eex", read_file("src/application.html.eex")
-    File.write! "web/templates/index.html.eex", read_file("src/index.html.eex")
-    File.write! "web/routers/application_router.ex", read_file("src/application_router.ex")
+    copy_file "src/application.html.eex",  to: "web/templates/layouts/application.html.eex", config: config
+    copy_file "src/index.html.eex",        to: "web/templates/index.html.eex", config: config
+    copy_file "src/application_router.ex", to: "web/routers/application_router.ex", config: config
   end
 
-  defp update_readme do
-    File.write! "README.md", read_file("README-append.md"), [ :append ]
+  defp update_readme(config) do
+    append_file "README-append.md", to: "README.md", config: config
   end
 
-  defp display_instructions do
+  defp display_instructions(config) do
     { { dy, dm, dd }, _time } = :calendar.now_to_local_time(:erlang.now)
-    Mix.shell.info read_template("instructions.txt", [ year: dy, month: dm, day: dd ])
+    Mix.shell.info read_template("instructions.txt", config, [ year: dy, month: dm, day: dd ])
   end
 end
