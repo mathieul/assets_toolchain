@@ -2,16 +2,25 @@ defmodule AssetsToolchain.Helper do
 
   @template_dir Path.expand("../../templates", __DIR__)
 
-  defrecord Config, folders: []
+  defrecord Config, folders: [], compass: ""
 
   def parse_config(args) do
     options = OptionParser.parse(args, aliases:  [c: :css])
+
     paths = case options do
-      { [ css: css ], _ } -> [ css, "common" ]
-      _                   -> [ "common" ]
+      { [ css: css ], _, _ } -> [ css, "common" ]
+      _                      -> [ "common" ]
     end
     folders = Enum.map paths, &(Path.join([@template_dir, &1]))
-    Config.new folders: folders
+
+    compass = case css do
+      "bootstrap" -> "-r bootstrap-sass --using bootstrap"
+      "zurb"      -> "-r zurb-foundation --using foundation"
+      nil         -> ""
+      _           -> raise "Unknown css option #{inspect css}"
+    end
+
+    Config.new folders: folders, compass: compass
   end
 
   def read_template(name, config, binding // []) do

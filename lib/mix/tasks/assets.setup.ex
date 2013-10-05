@@ -34,7 +34,7 @@ defmodule Mix.Tasks.Assets.Setup do
   defp setup_compass(config) do
     File.mkdir_p! "./config"
     copy_file "config/compass.rb", config: config
-    Mix.shell.cmd "compass create . -r bootstrap-sass --using bootstrap"
+    Mix.shell.cmd "compass create . #{config.compass}"
     File.rm "config.rb"
     Mix.shell.cmd "mv priv/assets/stylesheets/styles.sass priv/assets/stylesheets/application.sass"
     append_file "sass/application-append.sass", to: "priv/assets/stylesheets/application.sass", config: config
